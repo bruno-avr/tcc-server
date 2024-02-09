@@ -6,6 +6,99 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "ERD.pdf"
+  theme = "neutral"
+  disabled = false
+}
+
+model Professor {
+  id              String       @id @default(uuid())
+  name            String
+  disciplinas     Disciplina[]
+  aulas           Aula[]
+}
+
+model Disciplina {
+  id            String       @id @default(uuid())
+  name          String
+  professores   Professor[]
+  series        DisciplinaPorSerie[]
+  aulas         Aula[]
+}
+
+model DisciplinaPorSerie {
+  aulasSemanais Int
+
+  disciplinaId  String
+  disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
+
+  serieId  String
+  serie    Serie @relation(fields: [serieId], references: [id])
+
+  @@id([disciplinaId, serieId])
+}
+
+model Serie {
+  id            String       @id @default(uuid())
+  name          String
+  disciplinas        DisciplinaPorSerie[]
+  turmas Turma[]
+}
+
+model Turma {
+  id            String       @id @default(uuid())
+  name          String
+
+  serieId       String
+  serie         Serie @relation(fields: [serieId], references: [id])
+
+  horario       Horario?
+}
+
+model Horario {
+  id            String        @id @default(uuid())
+  
+  turmaId       String        @unique
+  turma         Turma         @relation(fields: [turmaId], references: [id])
+
+  aulas Aula[]
+}
+
+model Aula {
+  id            String        @id @default(uuid())
+  
+  horarioId     String
+  horario       Horario @relation(fields: [horarioId], references: [id])
+
+  professorId   String
+  professor     Professor @relation(fields: [professorId], references: [id])
+
+  disciplinaId  String
+  disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
+}
+
+
+
+
+
+
+model HorariosDisponiveis {
+  id            String        @id @default(uuid())
+  
+  diaDaSemana   Int
+  horarios      Hora[]
+}
+
+model Hora {
+  id      String        @id @default(uuid())
+  hora    String
+
+  horariosDisponiveisId   String        @unique
+  horariosDisponiveis     HorariosDisponiveis   @relation(fields: [horariosDisponiveisId], references: [id])
 }
