@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator erd {
@@ -15,6 +15,16 @@ generator erd {
   output = "ERD.pdf"
   theme = "neutral"
   disabled = false
+}
+
+enum DiaDaSemana {
+  DOMINGO
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+  SABADO
 }
 
 model Professor {
@@ -71,7 +81,9 @@ model Horario {
 }
 
 model Aula {
-  id            String        @id @default(uuid())
+  id                    String        @id @default(uuid())
+  diaDaSemana           DiaDaSemana
+  horarioDeInicio       String
   
   horarioId     String
   horario       Horario @relation(fields: [horarioId], references: [id])
@@ -91,7 +103,7 @@ model Aula {
 model HorariosDisponiveis {
   id            String        @id @default(uuid())
   
-  diaDaSemana   Int
+  diaDaSemana   DiaDaSemana
   horarios      Hora[]
 }
 
