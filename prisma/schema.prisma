@@ -12,7 +12,7 @@ datasource db {
 
 generator erd {
   provider = "prisma-erd-generator"
-  output = "ERD.pdf"
+  output = "ERD.png"
   theme = "neutral"
   disabled = false
 }
@@ -68,16 +68,8 @@ model Turma {
   serieId       String
   serie         Serie @relation(fields: [serieId], references: [id])
 
-  horario       Horario?
-}
-
-model Horario {
-  id            String        @id @default(uuid())
-  
-  turmaId       String        @unique
-  turma         Turma         @relation(fields: [turmaId], references: [id])
-
-  aulas Aula[]
+  aulas                     Aula[]
+  horariosDisponiveis       HorariosDisponiveis[]
 }
 
 model Aula {
@@ -85,8 +77,8 @@ model Aula {
   diaDaSemana           DiaDaSemana
   horarioDeInicio       String
   
-  horarioId     String
-  horario       Horario @relation(fields: [horarioId], references: [id])
+  turmaId       String
+  turma         Turma         @relation(fields: [turmaId], references: [id])
 
   professorId   String
   professor     Professor @relation(fields: [professorId], references: [id])
@@ -95,13 +87,11 @@ model Aula {
   disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
 }
 
-
-
-
-
-
 model HorariosDisponiveis {
   id            String        @id @default(uuid())
+
+  turmaId       String
+  turma         Turma         @relation(fields: [turmaId], references: [id])
   
   diaDaSemana   DiaDaSemana
   horarios      Hora[]
