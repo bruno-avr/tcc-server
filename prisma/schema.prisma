@@ -17,16 +17,6 @@ generator erd {
   disabled = false
 }
 
-enum DiaDaSemana {
-  DOMINGO
-  SEGUNDA
-  TERCA
-  QUARTA
-  QUINTA
-  SEXTA
-  SABADO
-}
-
 model Professor {
   id              String       @id @default(uuid())
   name            String
@@ -37,27 +27,16 @@ model Professor {
 model Disciplina {
   id            String       @id @default(uuid())
   name          String
+  numAulasSemanais  Int
   professores   Professor[]
-  series        DisciplinaPorSerie[]
+  series        Serie[]
   aulas         Aula[]
-}
-
-model DisciplinaPorSerie {
-  aulasSemanais Int
-
-  disciplinaId  String
-  disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
-
-  serieId  String
-  serie    Serie @relation(fields: [serieId], references: [id])
-
-  @@id([disciplinaId, serieId])
 }
 
 model Serie {
   id            String       @id @default(uuid())
   name          String
-  disciplinas        DisciplinaPorSerie[]
+  disciplinas        Disciplina[]
   turmas Turma[]
 }
 
@@ -69,13 +48,12 @@ model Turma {
   serie         Serie @relation(fields: [serieId], references: [id])
 
   aulas                     Aula[]
-  horariosDisponiveis       HorariosDisponiveis[]
+  horariosDisponiveis       Int[]
 }
 
 model Aula {
   id                    String        @id @default(uuid())
-  diaDaSemana           DiaDaSemana
-  horarioDeInicio       String
+  horarioDeInicio       Int
   
   turmaId       String
   turma         Turma         @relation(fields: [turmaId], references: [id])
@@ -85,22 +63,4 @@ model Aula {
 
   disciplinaId  String
   disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
-}
-
-model HorariosDisponiveis {
-  id            String        @id @default(uuid())
-
-  turmaId       String
-  turma         Turma         @relation(fields: [turmaId], references: [id])
-  
-  diaDaSemana   DiaDaSemana
-  horarios      Hora[]
-}
-
-model Hora {
-  id      String        @id @default(uuid())
-  hora    String
-
-  horariosDisponiveisId   String        @unique
-  horariosDisponiveis     HorariosDisponiveis   @relation(fields: [horariosDisponiveisId], references: [id])
 }
