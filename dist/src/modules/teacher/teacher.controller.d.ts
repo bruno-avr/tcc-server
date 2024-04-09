@@ -8,11 +8,9 @@ export declare class TeacherController {
         name: string;
     }>;
     find(): Promise<{
-        data: {
-            id: string;
-            name: string;
-        }[];
-    }>;
+        id: string;
+        name: string;
+    }[]>;
     findOne(id: string): Promise<{
         id: string;
         name: string;

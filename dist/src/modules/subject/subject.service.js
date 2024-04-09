@@ -9,46 +9,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TeacherService = void 0;
+exports.SubjectService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../database/prisma.service");
-let TeacherService = class TeacherService {
+let SubjectService = class SubjectService {
     constructor(prisma) {
         this.prisma = prisma;
     }
     async create(data) {
-        const nameExists = await this.prisma.teacher.findFirst({
-            where: { name: data.name },
-        });
-        if (nameExists) {
-            throw new Error("Teacher name already registered");
-        }
-        const teacher = await this.prisma.teacher.create({
+        const subject = await this.prisma.subject.create({
             data: {
                 ...data,
             },
         });
-        return teacher;
+        return subject;
     }
     async find() {
-        const teachers = await this.prisma.teacher.findMany({
+        const subjects = await this.prisma.subject.findMany({
             orderBy: [{ name: "asc" }],
         });
-        return teachers;
+        return subjects;
     }
     async findOne(id) {
-        const teacher = await this.prisma.teacher.findFirst({
+        const subject = await this.prisma.subject.findFirst({
             where: { id },
         });
-        if (!teacher) {
-            throw new Error("Teacher not found");
+        if (!subject) {
+            throw new Error("Subject not found");
         }
-        return teacher;
+        return subject;
     }
 };
-exports.TeacherService = TeacherService;
-exports.TeacherService = TeacherService = __decorate([
+exports.SubjectService = SubjectService;
+exports.SubjectService = SubjectService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
-], TeacherService);
-//# sourceMappingURL=teacher.service.js.map
+], SubjectService);
+//# sourceMappingURL=subject.service.js.map

@@ -27,7 +27,7 @@ export class TeacherService {
       orderBy: [{ name: "asc" }],
     });
 
-    return { data: teachers };
+    return teachers;
   }
 
   async findOne(id: string) {
