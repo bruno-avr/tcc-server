@@ -17,50 +17,50 @@ generator erd {
   disabled = false
 }
 
-model Professor {
+model Teacher { // Professor
   id              String       @id @default(uuid())
   name            String
-  disciplinas     Disciplina[]
-  aulas           Aula[]
+  subjects     Subject[]
+  lessons           Lesson[]
 }
 
-model Disciplina {
+model Subject { // Disciplina
   id            String       @id @default(uuid())
   name          String
-  numAulasSemanais  Int
-  professores   Professor[]
-  series        Serie[]
-  aulas         Aula[]
+  numWeeklyLessons  Int
+  teachers   Teacher[]
+  grades        Grade[]
+  lessons         Lesson[]
 }
 
-model Serie {
+model Grade { // Serie
   id            String       @id @default(uuid())
   name          String
-  disciplinas        Disciplina[]
-  turmas Turma[]
+  subjects        Subject[]
+  classes Class[]
 }
 
-model Turma {
+model Class { // Turma
   id            String       @id @default(uuid())
   name          String
 
-  serieId       String
-  serie         Serie @relation(fields: [serieId], references: [id])
+  gradeId       String
+  grade         Grade @relation(fields: [gradeId], references: [id])
 
-  aulas                     Aula[]
-  horariosDisponiveis       Int[]
+  lessons                     Lesson[]
+  availableTimeSlots          Int[] // horarios disponiveis
 }
 
-model Aula {
+model Lesson { // Aulas
   id                    String        @id @default(uuid())
-  horarioDeInicio       Int
+  startTime       Int
   
-  turmaId       String
-  turma         Turma         @relation(fields: [turmaId], references: [id])
+  classId       String
+  class         Class         @relation(fields: [classId], references: [id])
 
-  professorId   String
-  professor     Professor @relation(fields: [professorId], references: [id])
+  teacherId   String
+  teacher     Teacher @relation(fields: [teacherId], references: [id])
 
-  disciplinaId  String
-  disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
+  subjectId  String
+  subject    Subject @relation(fields: [subjectId], references: [id])
 }
