@@ -12,12 +12,14 @@ const core_1 = require("@nestjs/core");
 const exception_filter_1 = require("./exception.filter");
 const teacher_module_1 = require("./modules/teacher/teacher.module");
 const subject_module_1 = require("./modules/subject/subject.module");
+const grade_module_1 = require("./modules/grade/grade.module");
+const class_module_1 = require("./modules/class/class.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [teacher_module_1.TeacherModule, subject_module_1.SubjectModule],
+        imports: [teacher_module_1.TeacherModule, subject_module_1.SubjectModule, grade_module_1.GradeModule, class_module_1.ClassModule],
         controllers: [],
         providers: [
             {
