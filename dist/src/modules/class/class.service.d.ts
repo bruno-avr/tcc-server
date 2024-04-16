@@ -5,19 +5,24 @@ export declare class ClassService {
     constructor(prisma: PrismaService);
     create(data: Prisma.ClassCreateInput): Promise<{
         id: string;
-        name: string;
+        section: string;
         gradeId: string;
         availableTimeSlots: number[];
     }>;
-    find(): Promise<{
+    find(): Promise<({
+        grade: {
+            id: string;
+            name: string;
+        };
+    } & {
         id: string;
-        name: string;
+        section: string;
         gradeId: string;
         availableTimeSlots: number[];
-    }[]>;
+    })[]>;
     findOne(id: string): Promise<{
         id: string;
-        name: string;
+        section: string;
         gradeId: string;
         availableTimeSlots: number[];
     }>;

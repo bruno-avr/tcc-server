@@ -34,7 +34,7 @@ export class GradeService {
           orderBy: [{ subject: { name: "asc" } }],
         },
         classes: {
-          orderBy: [{ name: "asc" }],
+          orderBy: [{ section: "asc" }],
         },
       },
     });

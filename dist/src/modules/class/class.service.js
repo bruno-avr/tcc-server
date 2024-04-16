@@ -26,7 +26,10 @@ let ClassService = class ClassService {
     }
     async find() {
         const classes = await this.prisma.class.findMany({
-            orderBy: [{ name: "asc" }],
+            include: {
+                grade: true,
+            },
+            orderBy: [{ grade: { name: "asc" } }, { section: "asc" }],
         });
         return classes;
     }

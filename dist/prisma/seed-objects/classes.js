@@ -5,6 +5,7 @@ const classes = [
     { grade: "6º ano", section: "A" },
     { grade: "6º ano", section: "B" },
     { grade: "7º ano", section: "A" },
+    { grade: "6º ano", section: "B" },
     { grade: "8º ano", section: "A" },
     { grade: "9º ano", section: "A" },
 ];
