@@ -53,7 +53,7 @@ model Grade { // Serie
 
 model Class { // Turma
   id            String       @id @default(uuid())
-  name          String
+  section          String // identificador da turma. Ex: Turma A
 
   gradeId       String
   grade         Grade @relation(fields: [gradeId], references: [id])

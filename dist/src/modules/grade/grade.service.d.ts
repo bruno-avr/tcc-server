@@ -12,5 +12,9 @@ export declare class GradeService {
         id: string;
         name: string;
     }>;
+    update(id: string, data: Prisma.GradeUpdateInput): Promise<{
+        id: string;
+        name: string;
+    }>;
     remove(id: string): Promise<void>;
 }

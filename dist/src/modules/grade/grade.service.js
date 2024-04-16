@@ -17,6 +17,8 @@ let GradeService = class GradeService {
         this.prisma = prisma;
     }
     async create(data) {
+        if (!data.name)
+            throw new Error('O campo "nome" é obrigatório.');
         const nameExists = await this.prisma.grade.findFirst({
             where: { name: data.name },
         });
@@ -58,6 +60,23 @@ let GradeService = class GradeService {
     async findOne(id) {
         const grade = await this.prisma.grade.findFirst({
             where: { id },
+        });
+        if (!grade) {
+            throw new Error("Série não encontrada");
+        }
+        return grade;
+    }
+    async update(id, data) {
+        if (!data.name)
+            throw new Error('O campo "nome" é obrigatório.');
+        const nameExists = await this.prisma.grade.findFirst({
+            where: { name: String(data.name) },
+        });
+        if (nameExists)
+            throw new Error("Já existe uma série registrada com esse nome.");
+        const grade = await this.prisma.grade.update({
+            where: { id },
+            data: { name: data.name },
         });
         if (!grade) {
             throw new Error("Série não encontrada");

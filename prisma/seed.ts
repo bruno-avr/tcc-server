@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import teachers from "./seed-objects/teachers";
 import grades from "./seed-objects/grades";
 import getSubjects from "./seed-objects/subjects";
+import getClasses from "./seed-objects/classes";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -14,6 +15,12 @@ async function main() {
     console.log("Seeding grades...");
     const gradeObjs = await Promise.all(
       grades.map(async (data) => await prisma.grade.create({ data }))
+    );
+
+    console.log("Seeding classes...");
+    const classes = getClasses(gradeObjs);
+    const classObjs = await Promise.all(
+      classes.map(async (data) => await prisma.class.create({ data }))
     );
 
     console.log("Seeding subjects...");
