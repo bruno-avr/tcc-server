@@ -29,6 +29,9 @@ let GradeController = class GradeController {
     findOne(id) {
         return this.gradeService.findOne(id);
     }
+    remove(id) {
+        return this.gradeService.remove(id);
+    }
 };
 exports.GradeController = GradeController;
 __decorate([
@@ -51,6 +54,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], GradeController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], GradeController.prototype, "remove", null);
 exports.GradeController = GradeController = __decorate([
     (0, common_1.Controller)("grade"),
     __metadata("design:paramtypes", [grade_service_1.GradeService])

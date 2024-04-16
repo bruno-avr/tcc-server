@@ -28,4 +28,9 @@ export class GradeController {
   findOne(@Param("id") id: string) {
     return this.gradeService.findOne(id);
   }
+
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.gradeService.remove(id);
+  }
 }

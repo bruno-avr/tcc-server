@@ -6,16 +6,13 @@ export declare class SubjectService {
     create(data: Prisma.SubjectCreateInput): Promise<{
         id: string;
         name: string;
-        numWeeklyLessons: number;
     }>;
     find(): Promise<{
         id: string;
         name: string;
-        numWeeklyLessons: number;
     }[]>;
     findOne(id: string): Promise<{
         id: string;
         name: string;
-        numWeeklyLessons: number;
     }>;
 }

@@ -17,6 +17,11 @@ let GradeService = class GradeService {
         this.prisma = prisma;
     }
     async create(data) {
+        const nameExists = await this.prisma.grade.findFirst({
+            where: { name: data.name },
+        });
+        if (nameExists)
+            throw new Error("Já existe uma série registrada com esse nome.");
         const grade = await this.prisma.grade.create({
             data: {
                 ...data,
@@ -25,8 +30,28 @@ let GradeService = class GradeService {
         return grade;
     }
     async find() {
-        const grades = await this.prisma.grade.findMany({
+        const dirtyGrades = await this.prisma.grade.findMany({
             orderBy: [{ name: "asc" }],
+            include: {
+                subjectsPerGrade: {
+                    include: {
+                        subject: true,
+                    },
+                    orderBy: [{ subject: { name: "asc" } }],
+                },
+                classes: {
+                    orderBy: [{ name: "asc" }],
+                },
+            },
+        });
+        const grades = dirtyGrades.map((dirtyGrade) => {
+            const grade = dirtyGrade;
+            grade.subjects = grade.subjectsPerGrade.map((subjectPerGrade) => ({
+                name: subjectPerGrade.subject.name,
+                numWeeklyLessons: subjectPerGrade.numWeeklyLessons,
+            }));
+            delete grade.subjectsPerGrade;
+            return grade;
         });
         return grades;
     }
@@ -35,9 +60,22 @@ let GradeService = class GradeService {
             where: { id },
         });
         if (!grade) {
-            throw new Error("Grade not found");
+            throw new Error("Série não encontrada");
         }
         return grade;
+    }
+    async remove(id) {
+        const hasSubject = await this.prisma.subject.findFirst({
+            where: { numLessonsPerGrade: { some: { gradeId: id } } },
+        });
+        if (hasSubject)
+            throw new Error("Existem disciplinas que dependem dessa série.");
+        const hasClass = await this.prisma.class.findFirst({
+            where: { gradeId: id },
+        });
+        if (hasClass)
+            throw new Error("Existem turmas que dependem dessa série.");
+        await this.prisma.grade.delete({ where: { id } });
     }
 };
 exports.GradeService = GradeService;

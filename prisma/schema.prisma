@@ -27,17 +27,28 @@ model Teacher { // Professor
 model Subject { // Disciplina
   id            String       @id @default(uuid())
   name          String
-  numWeeklyLessons  Int
+  numLessonsPerGrade        NumLessonsPerGrade[]
   teachers   Teacher[]
-  grades        Grade[]
   lessons         Lesson[]
+}
+
+model NumLessonsPerGrade { // Numero de aular por serie
+  id            String       @id @default(uuid())
+
+  subjectId       String
+  subject         Subject @relation(fields: [subjectId], references: [id])
+
+  gradeId       String
+  grade         Grade @relation(fields: [gradeId], references: [id])
+
+  numWeeklyLessons  Int
 }
 
 model Grade { // Serie
   id            String       @id @default(uuid())
   name          String
-  subjects        Subject[]
-  classes Class[]
+  classes           Class[]
+  subjectsPerGrade  NumLessonsPerGrade[]
 }
 
 model Class { // Turma

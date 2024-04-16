@@ -7,12 +7,10 @@ export declare class GradeService {
         id: string;
         name: string;
     }>;
-    find(): Promise<{
-        id: string;
-        name: string;
-    }[]>;
+    find(): Promise<any[]>;
     findOne(id: string): Promise<{
         id: string;
         name: string;
     }>;
+    remove(id: string): Promise<void>;
 }
