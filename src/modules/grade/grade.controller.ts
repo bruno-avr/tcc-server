@@ -24,6 +24,11 @@ export class GradeController {
     return this.gradeService.find();
   }
 
+  @Get("/names")
+  getNames() {
+    return this.gradeService.getNames();
+  }
+
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.gradeService.findOne(id);

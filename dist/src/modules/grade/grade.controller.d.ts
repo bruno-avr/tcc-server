@@ -8,6 +8,10 @@ export declare class GradeController {
         name: string;
     }>;
     find(): Promise<any[]>;
+    getNames(): Promise<{
+        id: string;
+        name: string;
+    }[]>;
     findOne(id: string): Promise<{
         id: string;
         name: string;

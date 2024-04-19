@@ -26,6 +26,9 @@ let GradeController = class GradeController {
     find() {
         return this.gradeService.find();
     }
+    getNames() {
+        return this.gradeService.getNames();
+    }
     findOne(id) {
         return this.gradeService.findOne(id);
     }
@@ -50,6 +53,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], GradeController.prototype, "find", null);
+__decorate([
+    (0, common_1.Get)("/names"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], GradeController.prototype, "getNames", null);
 __decorate([
     (0, common_1.Get)(":id"),
     __param(0, (0, common_1.Param)("id")),

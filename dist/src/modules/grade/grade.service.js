@@ -66,6 +66,12 @@ let GradeService = class GradeService {
         }
         return grade;
     }
+    async getNames() {
+        const grades = await this.prisma.grade.findMany({
+            orderBy: [{ name: "asc" }],
+        });
+        return grades;
+    }
     async update(id, data) {
         if (!data.name)
             throw new Error('O campo "nome" é obrigatório.');

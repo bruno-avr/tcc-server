@@ -17,6 +17,15 @@ let ClassService = class ClassService {
         this.prisma = prisma;
     }
     async create(data) {
+        if (!data.grade.connect.id)
+            throw new Error('O campo "Série" é obrigatório.');
+        if (!data.section)
+            throw new Error('O campo "Código da Turma" é obrigatório.');
+        const classExists = await this.prisma.class.findFirst({
+            where: { gradeId: data.grade.connect.id, section: data.section },
+        });
+        if (classExists)
+            throw new Error("Já existe uma turma registrada com esse nome.");
         const _class = await this.prisma.class.create({
             data: {
                 ...data,

@@ -7,13 +7,17 @@ export class ClassService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.ClassCreateInput) {
-    // const nameExists = await this.prisma.class.findFirst({
-    //   where: { name: data.name },
-    // });
+    if (!data.grade.connect.id)
+      throw new Error('O campo "Série" é obrigatório.');
+    if (!data.section)
+      throw new Error('O campo "Código da Turma" é obrigatório.');
+    const classExists = await this.prisma.class.findFirst({
+      where: { gradeId: data.grade.connect.id, section: data.section },
+    });
 
-    // if (nameExists) {
-    //   throw new Error("Class name already registered");
-    // }
+    if (classExists)
+      throw new Error("Já existe uma turma registrada com esse nome.");
+
     const _class = await this.prisma.class.create({
       data: {
         ...data,
