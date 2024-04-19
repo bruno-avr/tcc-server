@@ -26,4 +26,10 @@ export declare class ClassService {
         gradeId: string;
         availableTimeSlots: number[];
     }>;
+    update(id: string, data: Prisma.ClassUpdateInput): Promise<{
+        id: string;
+        section: string;
+        gradeId: string;
+        availableTimeSlots: number[];
+    }>;
 }

@@ -11,10 +11,10 @@ export class ClassService {
       throw new Error('O campo "Série" é obrigatório.');
     if (!data.section)
       throw new Error('O campo "Código da Turma" é obrigatório.');
+
     const classExists = await this.prisma.class.findFirst({
       where: { gradeId: data.grade.connect.id, section: data.section },
     });
-
     if (classExists)
       throw new Error("Já existe uma turma registrada com esse nome.");
 
@@ -44,6 +44,32 @@ export class ClassService {
 
     if (!_class) {
       throw new Error("Class not found");
+    }
+
+    return _class;
+  }
+
+  async update(id: string, data: Prisma.ClassUpdateInput) {
+    if (!data.grade.connect.id)
+      throw new Error('O campo "Série" é obrigatório.');
+    if (!data.section)
+      throw new Error('O campo "Código da Turma" é obrigatório.');
+
+    const classExists = await this.prisma.class.findFirst({
+      where: { gradeId: data.grade.connect.id, section: String(data.section) },
+    });
+    if (classExists && classExists.id !== id)
+      throw new Error("Já existe uma turma registrada com esse nome.");
+
+    const _class = await this.prisma.class.update({
+      where: { id },
+      data: {
+        ...data,
+      },
+    });
+
+    if (!_class) {
+      throw new Error("Série não encontrada");
     }
 
     return _class;

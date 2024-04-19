@@ -28,4 +28,9 @@ export class ClassController {
   findOne(@Param("id") id: string) {
     return this.classService.findOne(id);
   }
+
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() data: Prisma.ClassUpdateInput) {
+    return this.classService.update(id, data);
+  }
 }

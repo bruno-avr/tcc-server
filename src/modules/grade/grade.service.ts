@@ -79,7 +79,7 @@ export class GradeService {
       where: { name: String(data.name) },
     });
 
-    if (nameExists)
+    if (nameExists && nameExists.id !== id)
       throw new Error("Já existe uma série registrada com esse nome.");
 
     const grade = await this.prisma.grade.update({
