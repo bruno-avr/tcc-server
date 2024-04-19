@@ -32,4 +32,5 @@ export declare class ClassService {
         gradeId: string;
         availableTimeSlots: number[];
     }>;
+    remove(id: string): Promise<void>;
 }

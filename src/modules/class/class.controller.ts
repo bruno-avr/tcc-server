@@ -33,4 +33,9 @@ export class ClassController {
   update(@Param("id") id: string, @Body() data: Prisma.ClassUpdateInput) {
     return this.classService.update(id, data);
   }
+
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.classService.remove(id);
+  }
 }

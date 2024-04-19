@@ -72,6 +72,9 @@ let ClassService = class ClassService {
         }
         return _class;
     }
+    async remove(id) {
+        await this.prisma.class.delete({ where: { id } });
+    }
 };
 exports.ClassService = ClassService;
 exports.ClassService = ClassService = __decorate([

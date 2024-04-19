@@ -74,4 +74,8 @@ export class ClassService {
 
     return _class;
   }
+
+  async remove(id: string) {
+    await this.prisma.class.delete({ where: { id } });
+  }
 }
