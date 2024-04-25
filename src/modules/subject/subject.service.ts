@@ -25,6 +25,14 @@ export class SubjectService {
   async find() {
     const subjects = await this.prisma.subject.findMany({
       orderBy: [{ name: "asc" }],
+      include: {
+        numLessonsPerGrade: {
+          orderBy: [{ grade: { name: "asc" } }],
+          include: {
+            grade: true,
+          },
+        },
+      },
     });
 
     return subjects;
