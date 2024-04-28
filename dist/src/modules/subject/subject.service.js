@@ -59,6 +59,34 @@ let SubjectService = class SubjectService {
         });
         if (subjectExists && subjectExists.id !== id)
             throw new Error("Já existe uma disciplina registrada com esse nome.");
+        const existants = [];
+        const news = [];
+        await Promise.all(data.numLessonsPerGrade.create.map(async (el) => {
+            const found = await this.prisma.numLessonsPerGrade.findFirst({
+                where: {
+                    subjectId: id,
+                    gradeId: el.grade.connect.id,
+                },
+            });
+            if (found) {
+                const res = await this.prisma.numLessonsPerGrade.update({
+                    where: {
+                        id: found.id,
+                    },
+                    data: {
+                        numWeeklyLessons: el.numWeeklyLessons,
+                    },
+                });
+                existants.push(found.id);
+            }
+            else {
+                news.push(el);
+            }
+        }));
+        data.numLessonsPerGrade.create = news;
+        await this.prisma.numLessonsPerGrade.deleteMany({
+            where: { subjectId: id, id: { notIn: existants } },
+        });
         const subject = await this.prisma.subject.update({
             where: { id },
             data: {
