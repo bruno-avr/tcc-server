@@ -28,4 +28,9 @@ export class SubjectController {
   findOne(@Param("id") id: string) {
     return this.subjectService.findOne(id);
   }
+
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() data: Prisma.SubjectUpdateInput) {
+    return this.subjectService.update(id, data);
+  }
 }

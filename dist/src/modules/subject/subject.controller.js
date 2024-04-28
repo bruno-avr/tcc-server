@@ -29,6 +29,9 @@ let SubjectController = class SubjectController {
     findOne(id) {
         return this.subjectService.findOne(id);
     }
+    update(id, data) {
+        return this.subjectService.update(id, data);
+    }
 };
 exports.SubjectController = SubjectController;
 __decorate([
@@ -51,6 +54,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SubjectController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], SubjectController.prototype, "update", null);
 exports.SubjectController = SubjectController = __decorate([
     (0, common_1.Controller)("subject"),
     __metadata("design:paramtypes", [subject_service_1.SubjectService])

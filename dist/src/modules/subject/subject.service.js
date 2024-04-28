@@ -17,6 +17,12 @@ let SubjectService = class SubjectService {
         this.prisma = prisma;
     }
     async create(data) {
+        const nameExists = await this.prisma.subject.findFirst({
+            where: { name: data.name },
+        });
+        if (nameExists) {
+            throw new Error("Já existe uma disciplina registrada com esse nome.");
+        }
         const subject = await this.prisma.subject.create({
             data: {
                 ...data,
@@ -44,6 +50,23 @@ let SubjectService = class SubjectService {
         });
         if (!subject) {
             throw new Error("Subject not found");
+        }
+        return subject;
+    }
+    async update(id, data) {
+        const subjectExists = await this.prisma.subject.findFirst({
+            where: { name: String(data.name) },
+        });
+        if (subjectExists && subjectExists.id !== id)
+            throw new Error("Já existe uma disciplina registrada com esse nome.");
+        const subject = await this.prisma.subject.update({
+            where: { id },
+            data: {
+                ...data,
+            },
+        });
+        if (!subject) {
+            throw new Error("Disciplina não encontrada");
         }
         return subject;
     }

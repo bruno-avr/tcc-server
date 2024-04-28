@@ -27,4 +27,8 @@ export declare class SubjectController {
         id: string;
         name: string;
     }>;
+    update(id: string, data: Prisma.SubjectUpdateInput): Promise<{
+        id: string;
+        name: string;
+    }>;
 }
