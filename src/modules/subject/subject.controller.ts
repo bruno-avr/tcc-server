@@ -24,6 +24,11 @@ export class SubjectController {
     return this.subjectService.find();
   }
 
+  @Get("/class")
+  findSubjectsPerClass() {
+    return this.subjectService.findSubjectsPerClass();
+  }
+
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.subjectService.findOne(id);

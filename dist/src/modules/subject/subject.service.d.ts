@@ -23,6 +23,11 @@ export declare class SubjectService {
         id: string;
         name: string;
     })[]>;
+    findSubjectsPerClass(): Promise<{
+        id: string;
+        name: string;
+        classes: any[];
+    }[]>;
     findOne(id: string): Promise<{
         id: string;
         name: string;

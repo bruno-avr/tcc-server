@@ -20,7 +20,7 @@ generator erd {
 model Teacher { // Professor
   id              String       @id @default(uuid())
   name            String
-  subjects     Subject[]
+  subjectsPerClass     SubjectPerClass[]
   lessons           Lesson[]
 }
 
@@ -28,7 +28,6 @@ model Subject { // Disciplina
   id            String       @id @default(uuid())
   name          String
   subjectsPerGrade        SubjectPerGrade[]
-  teachers   Teacher[]
   lessons         Lesson[]
 }
 
@@ -42,6 +41,21 @@ model SubjectPerGrade { // Numero de aular por serie
   grade         Grade @relation(fields: [gradeId], references: [id])
 
   numWeeklyLessons  Int
+
+  subjectsPerClass        SubjectPerClass[]
+}
+
+model SubjectPerClass { // Numero de aular por serie
+  id            String       @id @default(uuid())
+
+  teacherId       String
+  teacher         Teacher @relation(fields: [teacherId], references: [id])
+
+  classId       String
+  class         Class @relation(fields: [classId], references: [id])
+
+  subjectPerGradeId       String
+  subjectPerGrade         SubjectPerGrade @relation(fields: [subjectPerGradeId], references: [id])
 }
 
 model Grade { // Serie
@@ -60,6 +74,8 @@ model Class { // Turma
 
   lessons                     Lesson[]
   availableTimeSlots          Int[] // horarios disponiveis
+
+  subjectsPerClass        SubjectPerClass[]
 }
 
 model Lesson { // Aulas

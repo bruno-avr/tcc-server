@@ -38,6 +38,63 @@ export class SubjectService {
     return subjects;
   }
 
+  async findSubjectsPerClass() {
+    const grades = await this.prisma.grade.findMany({
+      include: {
+        classes: {
+          select: {
+            id: true,
+            section: true,
+          },
+          orderBy: [{ section: "asc" }],
+        },
+      },
+      orderBy: [{ name: "asc" }],
+    });
+    const dict = {};
+    grades.forEach((grade) => {
+      dict[grade.id] = grade.classes.map((_class) => ({
+        id: _class.id,
+        name: `${grade.name} - ${_class.section}`,
+      }));
+    });
+
+    const subjects = await this.prisma.subject.findMany({
+      orderBy: [{ name: "asc" }],
+      include: {
+        subjectsPerGrade: {
+          orderBy: [{ grade: { name: "asc" } }],
+          select: {
+            id: true,
+            gradeId: true,
+          },
+        },
+      },
+    });
+
+    const res = subjects.map((subject) => {
+      const classes = [];
+      subject.subjectsPerGrade.forEach((subjectPerGrade) => {
+        // subject.id
+        // subjectPerGrade.id
+        // subjectPerGrade.gradeId
+        classes.push(
+          ...(dict[subjectPerGrade.gradeId] || []).map((el) => ({
+            ...el,
+            subjectPerGradeId: subjectPerGrade.id,
+          }))
+        );
+      });
+      return {
+        id: subject.id,
+        name: subject.name,
+        classes,
+      };
+    });
+
+    return res;
+  }
+
   async findOne(id: string) {
     const subject = await this.prisma.subject.findFirst({
       where: { id },
