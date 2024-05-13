@@ -91,7 +91,7 @@ let GradeService = class GradeService {
     }
     async remove(id) {
         const hasSubject = await this.prisma.subject.findFirst({
-            where: { numLessonsPerGrade: { some: { gradeId: id } } },
+            where: { subjectsPerGrade: { some: { gradeId: id } } },
         });
         if (hasSubject)
             throw new Error("Existem disciplinas que dependem dessa série.");

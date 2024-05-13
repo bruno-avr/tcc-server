@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const subjects = [
     {
         name: "Língua Portuguesa",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 5 },
             { name: "7º ano", numWeeklyLessons: 5 },
             { name: "8º ano", numWeeklyLessons: 5 },
@@ -12,7 +12,7 @@ const subjects = [
     },
     {
         name: "Matemática",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 5 },
             { name: "7º ano", numWeeklyLessons: 5 },
             { name: "8º ano", numWeeklyLessons: 5 },
@@ -21,7 +21,7 @@ const subjects = [
     },
     {
         name: "História",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -30,7 +30,7 @@ const subjects = [
     },
     {
         name: "Geografia",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -39,7 +39,7 @@ const subjects = [
     },
     {
         name: "Ciências",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -48,7 +48,7 @@ const subjects = [
     },
     {
         name: "Educação Física",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -57,7 +57,7 @@ const subjects = [
     },
     {
         name: "Arte",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -66,7 +66,7 @@ const subjects = [
     },
     {
         name: "Ensino Religioso",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 1 },
             { name: "7º ano", numWeeklyLessons: 1 },
             { name: "8º ano", numWeeklyLessons: 1 },
@@ -75,7 +75,7 @@ const subjects = [
     },
     {
         name: "Inglês",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -84,7 +84,7 @@ const subjects = [
     },
     {
         name: "Espanhol",
-        numLessonsPerGrade: [
+        subjectsPerGrade: [
             { name: "6º ano", numWeeklyLessons: 2 },
             { name: "7º ano", numWeeklyLessons: 2 },
             { name: "8º ano", numWeeklyLessons: 2 },
@@ -96,10 +96,10 @@ let map;
 function formatSubjects(dirtySubjects) {
     const subjects = dirtySubjects.map((dirtySubject) => ({
         name: dirtySubject.name,
-        numLessonsPerGrade: {
-            create: dirtySubject.numLessonsPerGrade.map((numLessonsPerGrade) => ({
-                numWeeklyLessons: numLessonsPerGrade.numWeeklyLessons,
-                grade: { connect: { id: map[numLessonsPerGrade.name] } },
+        subjectsPerGrade: {
+            create: dirtySubject.subjectsPerGrade.map((subjectsPerGrade) => ({
+                numWeeklyLessons: subjectsPerGrade.numWeeklyLessons,
+                grade: { connect: { id: map[subjectsPerGrade.name] } },
             })),
         },
     }));

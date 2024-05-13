@@ -8,7 +8,7 @@ export declare class SubjectService {
         name: string;
     }>;
     find(): Promise<({
-        numLessonsPerGrade: ({
+        subjectsPerGrade: ({
             grade: {
                 id: string;
                 name: string;

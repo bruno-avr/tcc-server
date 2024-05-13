@@ -27,12 +27,12 @@ model Teacher { // Professor
 model Subject { // Disciplina
   id            String       @id @default(uuid())
   name          String
-  numLessonsPerGrade        NumLessonsPerGrade[]
+  subjectsPerGrade        SubjectPerGrade[]
   teachers   Teacher[]
   lessons         Lesson[]
 }
 
-model NumLessonsPerGrade { // Numero de aular por serie
+model SubjectPerGrade { // Numero de aular por serie
   id            String       @id @default(uuid())
 
   subjectId       String
@@ -48,7 +48,7 @@ model Grade { // Serie
   id            String       @id @default(uuid())
   name          String
   classes           Class[]
-  subjectsPerGrade  NumLessonsPerGrade[]
+  subjectsPerGrade  SubjectPerGrade[]
 }
 
 model Class { // Turma

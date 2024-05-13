@@ -26,7 +26,7 @@ export class SubjectService {
     const subjects = await this.prisma.subject.findMany({
       orderBy: [{ name: "asc" }],
       include: {
-        numLessonsPerGrade: {
+        subjectsPerGrade: {
           orderBy: [{ grade: { name: "asc" } }],
           include: {
             grade: true,
@@ -61,15 +61,15 @@ export class SubjectService {
     const news = [];
 
     await Promise.all(
-      (data.numLessonsPerGrade.create as any[]).map(async (el) => {
-        const found = await this.prisma.numLessonsPerGrade.findFirst({
+      (data.subjectsPerGrade.create as any[]).map(async (el) => {
+        const found = await this.prisma.subjectPerGrade.findFirst({
           where: {
             subjectId: id,
             gradeId: el.grade.connect.id,
           },
         });
         if (found) {
-          const res = await this.prisma.numLessonsPerGrade.update({
+          const res = await this.prisma.subjectPerGrade.update({
             where: {
               id: found.id,
             },
@@ -83,10 +83,10 @@ export class SubjectService {
         }
       })
     );
-    data.numLessonsPerGrade.create = news; // create only new objects
+    data.subjectsPerGrade.create = news; // create only new objects
 
     // delete objects that should no more exist
-    await this.prisma.numLessonsPerGrade.deleteMany({
+    await this.prisma.subjectPerGrade.deleteMany({
       where: { subjectId: id, id: { notIn: existants } },
     });
 

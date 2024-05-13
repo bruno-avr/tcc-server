@@ -34,7 +34,7 @@ let SubjectService = class SubjectService {
         const subjects = await this.prisma.subject.findMany({
             orderBy: [{ name: "asc" }],
             include: {
-                numLessonsPerGrade: {
+                subjectsPerGrade: {
                     orderBy: [{ grade: { name: "asc" } }],
                     include: {
                         grade: true,
@@ -61,15 +61,15 @@ let SubjectService = class SubjectService {
             throw new Error("Já existe uma disciplina registrada com esse nome.");
         const existants = [];
         const news = [];
-        await Promise.all(data.numLessonsPerGrade.create.map(async (el) => {
-            const found = await this.prisma.numLessonsPerGrade.findFirst({
+        await Promise.all(data.subjectsPerGrade.create.map(async (el) => {
+            const found = await this.prisma.subjectPerGrade.findFirst({
                 where: {
                     subjectId: id,
                     gradeId: el.grade.connect.id,
                 },
             });
             if (found) {
-                const res = await this.prisma.numLessonsPerGrade.update({
+                const res = await this.prisma.subjectPerGrade.update({
                     where: {
                         id: found.id,
                     },
@@ -83,8 +83,8 @@ let SubjectService = class SubjectService {
                 news.push(el);
             }
         }));
-        data.numLessonsPerGrade.create = news;
-        await this.prisma.numLessonsPerGrade.deleteMany({
+        data.subjectsPerGrade.create = news;
+        await this.prisma.subjectPerGrade.deleteMany({
             where: { subjectId: id, id: { notIn: existants } },
         });
         const subject = await this.prisma.subject.update({
