@@ -10,8 +10,14 @@ export declare class TeacherService {
     find(): Promise<{
         id: string;
         name: string;
+        selectedClasses: {};
+        classesPerSubject: any[];
     }[]>;
     findOne(id: string): Promise<{
+        id: string;
+        name: string;
+    }>;
+    update(id: string, data: Prisma.TeacherUpdateInput): Promise<{
         id: string;
         name: string;
     }>;

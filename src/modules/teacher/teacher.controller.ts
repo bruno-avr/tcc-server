@@ -28,4 +28,9 @@ export class TeacherController {
   findOne(@Param("id") id: string) {
     return this.teacherService.findOne(id);
   }
+
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() data: Prisma.TeacherUpdateInput) {
+    return this.teacherService.update(id, data);
+  }
 }
