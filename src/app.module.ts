@@ -5,9 +5,16 @@ import { TeacherModule } from "./modules/teacher/teacher.module";
 import { SubjectModule } from "./modules/subject/subject.module";
 import { GradeModule } from "./modules/grade/grade.module";
 import { ClassModule } from "./modules/class/class.module";
+import { ScheduleModule } from "./modules/schedule/schedule.module";
 
 @Module({
-  imports: [TeacherModule, SubjectModule, GradeModule, ClassModule],
+  imports: [
+    TeacherModule,
+    SubjectModule,
+    GradeModule,
+    ClassModule,
+    ScheduleModule,
+  ],
   controllers: [],
   providers: [
     {
