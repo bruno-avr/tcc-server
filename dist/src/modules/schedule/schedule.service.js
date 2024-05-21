@@ -86,6 +86,39 @@ let ScheduleService = class ScheduleService {
             cppBridge.appendLine(_class.availableTimeSlots);
         });
         const res = await cppBridge.processInput();
+        await Promise.all(res.schedules.map(async (schedule) => {
+            const _class = await this.prisma.class.findFirst({
+                where: { id: schedule.classId },
+                select: { section: true, grade: { select: { name: true } } },
+            });
+            schedule.className = `${_class.grade.name} - ${_class.section}`;
+            await Promise.all(schedule.lessons.map(async (lesson) => {
+                if (lesson.subjectId === "EMPTY") {
+                    lesson.empty = true;
+                    delete lesson.subjectId;
+                    return;
+                }
+                const subject = await this.prisma.subject.findFirst({
+                    where: { id: lesson.subjectId },
+                    select: { id: true, name: true },
+                });
+                delete lesson.subjectId;
+                lesson.subject = subject;
+                const subjectPerClass = await this.prisma.subjectPerClass.findFirst({
+                    where: {
+                        classId: schedule.classId,
+                        subjectPerGrade: { subjectId: subject.id },
+                    },
+                    select: {
+                        teacher: { select: { id: true, name: true } },
+                    },
+                });
+                if (subjectPerClass) {
+                    lesson.teacher = subjectPerClass.teacher;
+                }
+            }));
+        }));
+        res.schedules.sort((el1, el2) => el1.className.localeCompare(el2.className));
         return res;
     }
 };

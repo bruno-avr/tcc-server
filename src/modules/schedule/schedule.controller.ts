@@ -14,7 +14,7 @@ import { Prisma } from "@prisma/client";
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Post("/generate")
+  @Get("/generate")
   generate() {
     return this.scheduleService.generate();
   }

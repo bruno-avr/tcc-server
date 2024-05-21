@@ -22,7 +22,7 @@ let ScheduleController = class ScheduleController {
 };
 exports.ScheduleController = ScheduleController;
 __decorate([
-    (0, common_1.Post)("/generate"),
+    (0, common_1.Get)("/generate"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
