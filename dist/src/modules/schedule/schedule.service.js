@@ -17,8 +17,8 @@ let ScheduleService = class ScheduleService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async generate() {
-        const cppBridge = new CPPBridge_1.default();
+    async generate(defaultSchedule = null) {
+        const cppBridge = new CPPBridge_1.default(defaultSchedule ? "fixed_recalculation" : "calculation");
         let teachers = await this.prisma.teacher.findMany({
             include: {
                 subjectsPerClass: {
@@ -83,7 +83,19 @@ let ScheduleService = class ScheduleService {
                 _class.gradeId,
                 _class.availableTimeSlots.length,
             ]);
-            cppBridge.appendLine(_class.availableTimeSlots);
+            if (!defaultSchedule) {
+                cppBridge.appendLine(_class.availableTimeSlots);
+            }
+            else {
+                _class.availableTimeSlots.forEach((timeSlot) => {
+                    cppBridge.appendLine([
+                        timeSlot,
+                        defaultSchedule[_class.id][timeSlot].subjectId,
+                        defaultSchedule[_class.id][timeSlot].teacherId,
+                        defaultSchedule[_class.id][timeSlot].isFixed,
+                    ]);
+                });
+            }
         });
         const res = await cppBridge.processInput();
         await Promise.all(res.schedules.map(async (schedule) => {

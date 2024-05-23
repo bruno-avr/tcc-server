@@ -1,10 +1,10 @@
 import { spawn } from "child_process";
 
 export default class CPPBridge {
-  input;
+  input: string;
 
-  constructor() {
-    this.input = "";
+  constructor(type = "calculation", metaheuristic = "simulatedAnnealing") {
+    this.input = `${type} ${metaheuristic}\n`;
   }
 
   appendLine(line: any[] | any) {

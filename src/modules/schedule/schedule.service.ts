@@ -7,8 +7,10 @@ import CPPBridge from "src/utils/CPPBridge";
 export class ScheduleService {
   constructor(private prisma: PrismaService) {}
 
-  async generate() {
-    const cppBridge = new CPPBridge();
+  async generate(defaultSchedule = null) {
+    const cppBridge = new CPPBridge(
+      defaultSchedule ? "fixed_recalculation" : "calculation"
+    );
 
     let teachers = await this.prisma.teacher.findMany({
       include: {
@@ -93,7 +95,18 @@ export class ScheduleService {
         _class.gradeId,
         _class.availableTimeSlots.length,
       ]);
-      cppBridge.appendLine(_class.availableTimeSlots);
+      if (!defaultSchedule) {
+        cppBridge.appendLine(_class.availableTimeSlots);
+      } else {
+        _class.availableTimeSlots.forEach((timeSlot) => {
+          cppBridge.appendLine([
+            timeSlot,
+            defaultSchedule[_class.id][timeSlot].subjectId,
+            defaultSchedule[_class.id][timeSlot].teacherId,
+            defaultSchedule[_class.id][timeSlot].isFixed,
+          ]);
+        });
+      }
     });
 
     const res = await cppBridge.processInput();

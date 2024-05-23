@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { ScheduleService } from "./schedule.service";
 import { Prisma } from "@prisma/client";
@@ -14,8 +15,13 @@ import { Prisma } from "@prisma/client";
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Get("/generate")
+  @Post("/generate")
   generate() {
-    return this.scheduleService.generate();
+    return this.scheduleService.generate(false);
+  }
+
+  @Post("/fixed-recalculation")
+  fixedRecalculation(@Body() data) {
+    return this.scheduleService.generate(data);
   }
 }
