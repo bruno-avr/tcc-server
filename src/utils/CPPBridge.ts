@@ -3,7 +3,10 @@ import { spawn } from "child_process";
 export default class CPPBridge {
   input: string;
 
-  constructor(type = "calculation", metaheuristic = "simulatedAnnealing") {
+  constructor(
+    type: "calculation" | "fixed_recalculation",
+    metaheuristic: "simulatedAnnealing"
+  ) {
     this.input = `${type} ${metaheuristic}\n`;
   }
 

@@ -19,27 +19,59 @@ let ScheduleController = class ScheduleController {
     constructor(scheduleService) {
         this.scheduleService = scheduleService;
     }
-    generate() {
-        return this.scheduleService.generate(false);
+    generate(metaheuristic, data) {
+        return this.scheduleService.generate(metaheuristic, false);
     }
-    fixedRecalculation(data) {
-        return this.scheduleService.generate(data);
+    fixedRecalculation(metaheuristic, data) {
+        return this.scheduleService.generate(metaheuristic, data);
+    }
+    save(data) {
+        return this.scheduleService.save(data);
+    }
+    find() {
+        return this.scheduleService.find();
+    }
+    findOne(id) {
+        return this.scheduleService.findOne(id);
     }
 };
 exports.ScheduleController = ScheduleController;
 __decorate([
-    (0, common_1.Post)("/generate"),
+    (0, common_1.Post)("/generate/:metaheuristic"),
+    __param(0, (0, common_1.Param)("metaheuristic")),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], ScheduleController.prototype, "generate", null);
 __decorate([
-    (0, common_1.Post)("/fixed-recalculation"),
+    (0, common_1.Post)("/fixed-recalculation/:metaheuristic"),
+    __param(0, (0, common_1.Param)("metaheuristic")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], ScheduleController.prototype, "fixedRecalculation", null);
+__decorate([
+    (0, common_1.Post)("/save"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], ScheduleController.prototype, "fixedRecalculation", null);
+], ScheduleController.prototype, "save", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ScheduleController.prototype, "find", null);
+__decorate([
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ScheduleController.prototype, "findOne", null);
 exports.ScheduleController = ScheduleController = __decorate([
     (0, common_1.Controller)("schedule"),
     __metadata("design:paramtypes", [schedule_service_1.ScheduleService])

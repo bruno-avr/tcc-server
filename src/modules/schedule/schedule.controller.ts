@@ -15,13 +15,31 @@ import { Prisma } from "@prisma/client";
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Post("/generate")
-  generate() {
-    return this.scheduleService.generate(false);
+  @Post("/generate/:metaheuristic")
+  generate(@Param("metaheuristic") metaheuristic: string, @Body() data) {
+    return this.scheduleService.generate(metaheuristic, false);
   }
 
-  @Post("/fixed-recalculation")
-  fixedRecalculation(@Body() data) {
-    return this.scheduleService.generate(data);
+  @Post("/fixed-recalculation/:metaheuristic")
+  fixedRecalculation(
+    @Param("metaheuristic") metaheuristic: string,
+    @Body() data
+  ) {
+    return this.scheduleService.generate(metaheuristic, data);
+  }
+
+  @Post("/save")
+  save(@Body() data) {
+    return this.scheduleService.save(data);
+  }
+
+  @Get()
+  find() {
+    return this.scheduleService.find();
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.scheduleService.findOne(id);
   }
 }

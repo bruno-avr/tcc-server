@@ -21,14 +21,12 @@ model Teacher { // Professor
   id              String       @id @default(uuid())
   name            String
   subjectsPerClass     SubjectPerClass[]
-  lessons           Lesson[]
 }
 
 model Subject { // Disciplina
   id            String       @id @default(uuid())
   name          String
   subjectsPerGrade        SubjectPerGrade[]
-  lessons         Lesson[]
 }
 
 model SubjectPerGrade { // Numero de aular por serie
@@ -72,22 +70,19 @@ model Class { // Turma
   gradeId       String
   grade         Grade @relation(fields: [gradeId], references: [id])
 
-  lessons                     Lesson[]
   availableTimeSlots          Int[] // horarios disponiveis
 
   subjectsPerClass        SubjectPerClass[]
 }
 
-model Lesson { // Aulas
-  id                    String        @id @default(uuid())
-  startTime       Int
-  
-  classId       String
-  class         Class         @relation(fields: [classId], references: [id])
+model Schedule { // Horario
+  id                  String        @id @default(uuid())
+  schedulesJSON        Json
 
-  teacherId   String
-  teacher     Teacher @relation(fields: [teacherId], references: [id])
+  hasManualChange     Boolean
+  metaheuristic       String?
+  isFeasible          Boolean?
+  score               Int?
 
-  subjectId  String
-  subject    Subject @relation(fields: [subjectId], references: [id])
+  createdAt           DateTime           @default(now())
 }

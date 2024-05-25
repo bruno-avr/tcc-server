@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 class CPPBridge {
-    constructor(type = "calculation", metaheuristic = "simulatedAnnealing") {
+    constructor(type, metaheuristic) {
         this.input = `${type} ${metaheuristic}\n`;
     }
     appendLine(line) {

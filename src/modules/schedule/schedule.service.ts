@@ -7,9 +7,13 @@ import CPPBridge from "src/utils/CPPBridge";
 export class ScheduleService {
   constructor(private prisma: PrismaService) {}
 
-  async generate(defaultSchedule = null) {
+  async generate(metaheuristic: string, defaultSchedule = null) {
+    if (metaheuristic !== "simulatedAnnealing")
+      throw new Error("Metaheuristica invalida.");
+
     const cppBridge = new CPPBridge(
-      defaultSchedule ? "fixed_recalculation" : "calculation"
+      defaultSchedule ? "fixed_recalculation" : "calculation",
+      metaheuristic
     );
 
     let teachers = await this.prisma.teacher.findMany({
@@ -156,5 +160,50 @@ export class ScheduleService {
     );
 
     return res;
+  }
+
+  async save(data) {
+    const createData: Prisma.ScheduleCreateInput = {
+      hasManualChange: data.hasManualChange,
+      schedulesJSON: data.schedules,
+    };
+
+    if (!data.hasManualChange) {
+      createData.metaheuristic = data.metaheuristic;
+      createData.isFeasible = data.isFeasible;
+      if (data.isFeasible) createData.score = data.score;
+    }
+
+    const schedule = this.prisma.schedule.create({ data: createData });
+    return schedule;
+  }
+
+  async find() {
+    const schedules = this.prisma.schedule.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        isFeasible: true,
+        hasManualChange: true,
+        metaheuristic: true,
+        score: true,
+      },
+    });
+    return schedules;
+  }
+
+  async findOne(id: string) {
+    const schedule = await this.prisma.schedule.findFirst({
+      where: { id },
+    });
+
+    if (!schedule) {
+      throw new Error("Schedule not found");
+    }
+
+    return schedule;
   }
 }

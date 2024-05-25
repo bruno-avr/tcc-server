@@ -17,8 +17,10 @@ let ScheduleService = class ScheduleService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async generate(defaultSchedule = null) {
-        const cppBridge = new CPPBridge_1.default(defaultSchedule ? "fixed_recalculation" : "calculation");
+    async generate(metaheuristic, defaultSchedule = null) {
+        if (metaheuristic !== "simulatedAnnealing")
+            throw new Error("Metaheuristica invalida.");
+        const cppBridge = new CPPBridge_1.default(defaultSchedule ? "fixed_recalculation" : "calculation", metaheuristic);
         let teachers = await this.prisma.teacher.findMany({
             include: {
                 subjectsPerClass: {
@@ -132,6 +134,45 @@ let ScheduleService = class ScheduleService {
         }));
         res.schedules.sort((el1, el2) => el1.className.localeCompare(el2.className));
         return res;
+    }
+    async save(data) {
+        const createData = {
+            hasManualChange: data.hasManualChange,
+            schedulesJSON: data.schedules,
+        };
+        if (!data.hasManualChange) {
+            createData.metaheuristic = data.metaheuristic;
+            createData.isFeasible = data.isFeasible;
+            if (data.isFeasible)
+                createData.score = data.score;
+        }
+        const schedule = this.prisma.schedule.create({ data: createData });
+        return schedule;
+    }
+    async find() {
+        const schedules = this.prisma.schedule.findMany({
+            orderBy: {
+                createdAt: "desc",
+            },
+            select: {
+                id: true,
+                createdAt: true,
+                isFeasible: true,
+                hasManualChange: true,
+                metaheuristic: true,
+                score: true,
+            },
+        });
+        return schedules;
+    }
+    async findOne(id) {
+        const schedule = await this.prisma.schedule.findFirst({
+            where: { id },
+        });
+        if (!schedule) {
+            throw new Error("Schedule not found");
+        }
+        return schedule;
     }
 };
 exports.ScheduleService = ScheduleService;
