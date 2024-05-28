@@ -20,10 +20,18 @@ let ScheduleController = class ScheduleController {
         this.scheduleService = scheduleService;
     }
     generate(metaheuristic, data) {
-        return this.scheduleService.generate(metaheuristic, false);
+        return this.scheduleService.generate("generate", { metaheuristic });
     }
     fixedRecalculation(metaheuristic, data) {
-        return this.scheduleService.generate(metaheuristic, data);
+        return this.scheduleService.generate("fixed_recalculation", {
+            metaheuristic,
+            defaultSchedule: data,
+        });
+    }
+    calculateScore(data) {
+        return this.scheduleService.generate("calculate_score", {
+            defaultSchedule: data,
+        });
     }
     save(data) {
         return this.scheduleService.save(data);
@@ -52,6 +60,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], ScheduleController.prototype, "fixedRecalculation", null);
+__decorate([
+    (0, common_1.Post)("/calculate-score"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], ScheduleController.prototype, "calculateScore", null);
 __decorate([
     (0, common_1.Post)("/save"),
     __param(0, (0, common_1.Body)()),

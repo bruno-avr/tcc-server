@@ -1,13 +1,18 @@
 import { spawn } from "child_process";
 
+export type cppBridgeTypes =
+  | "generate"
+  | "calculate_score"
+  | "fixed_recalculation";
+
+export type cppBridgeMetaheuristcs = "simulatedAnnealing";
+
 export default class CPPBridge {
   input: string;
 
-  constructor(
-    type: "calculation" | "fixed_recalculation",
-    metaheuristic: "simulatedAnnealing"
-  ) {
-    this.input = `${type} ${metaheuristic}\n`;
+  constructor(type: cppBridgeTypes, metaheuristic?: cppBridgeMetaheuristcs) {
+    if (metaheuristic) this.input = `${type} ${metaheuristic}\n`;
+    else this.input = `${type}\n`;
   }
 
   appendLine(line: any[] | any) {

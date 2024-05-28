@@ -10,22 +10,36 @@ import {
 } from "@nestjs/common";
 import { ScheduleService } from "./schedule.service";
 import { Prisma } from "@prisma/client";
+import { cppBridgeMetaheuristcs } from "src/utils/CPPBridge";
 
 @Controller("schedule")
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   @Post("/generate/:metaheuristic")
-  generate(@Param("metaheuristic") metaheuristic: string, @Body() data) {
-    return this.scheduleService.generate(metaheuristic, false);
+  generate(
+    @Param("metaheuristic") metaheuristic: cppBridgeMetaheuristcs,
+    @Body() data
+  ) {
+    return this.scheduleService.generate("generate", { metaheuristic });
   }
 
   @Post("/fixed-recalculation/:metaheuristic")
   fixedRecalculation(
-    @Param("metaheuristic") metaheuristic: string,
+    @Param("metaheuristic") metaheuristic: cppBridgeMetaheuristcs,
     @Body() data
   ) {
-    return this.scheduleService.generate(metaheuristic, data);
+    return this.scheduleService.generate("fixed_recalculation", {
+      metaheuristic,
+      defaultSchedule: data,
+    });
+  }
+
+  @Post("/calculate-score")
+  calculateScore(@Body() data) {
+    return this.scheduleService.generate("calculate_score", {
+      defaultSchedule: data,
+    });
   }
 
   @Post("/save")

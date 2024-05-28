@@ -79,7 +79,6 @@ model Schedule { // Horario
   id                  String        @id @default(uuid())
   schedulesJSON        Json
 
-  hasManualChange     Boolean
   metaheuristic       String?
   isFeasible          Boolean?
   score               Int?

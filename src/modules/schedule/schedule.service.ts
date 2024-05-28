@@ -1,20 +1,30 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../database/prisma.service";
-import CPPBridge from "src/utils/CPPBridge";
+import CPPBridge, {
+  cppBridgeMetaheuristcs,
+  cppBridgeTypes,
+} from "src/utils/CPPBridge";
 
 @Injectable()
 export class ScheduleService {
   constructor(private prisma: PrismaService) {}
 
-  async generate(metaheuristic: string, defaultSchedule = null) {
-    if (metaheuristic !== "simulatedAnnealing")
+  async generate(
+    type: cppBridgeTypes,
+    data: {
+      metaheuristic?: cppBridgeMetaheuristcs;
+      defaultSchedule?: any;
+    }
+  ) {
+    if (
+      (type === "fixed_recalculation" || type === "generate") &&
+      data.metaheuristic !== "simulatedAnnealing"
+    ) {
       throw new Error("Metaheuristica invalida.");
+    }
 
-    const cppBridge = new CPPBridge(
-      defaultSchedule ? "fixed_recalculation" : "calculation",
-      metaheuristic
-    );
+    const cppBridge = new CPPBridge(type, data.metaheuristic || undefined);
 
     let teachers = await this.prisma.teacher.findMany({
       include: {
@@ -99,21 +109,25 @@ export class ScheduleService {
         _class.gradeId,
         _class.availableTimeSlots.length,
       ]);
-      if (!defaultSchedule) {
+      if (!data.defaultSchedule) {
         cppBridge.appendLine(_class.availableTimeSlots);
       } else {
         _class.availableTimeSlots.forEach((timeSlot) => {
           cppBridge.appendLine([
             timeSlot,
-            defaultSchedule[_class.id][timeSlot].subjectId,
-            defaultSchedule[_class.id][timeSlot].teacherId,
-            defaultSchedule[_class.id][timeSlot].isFixed,
+            data.defaultSchedule[_class.id][timeSlot].subjectId,
+            data.defaultSchedule[_class.id][timeSlot].teacherId,
+            ...(type == "fixed_recalculation"
+              ? [data.defaultSchedule[_class.id][timeSlot].isFixed]
+              : []),
           ]);
         });
       }
     });
 
     const res = await cppBridge.processInput();
+
+    if (type === "calculate_score") return res;
 
     await Promise.all(
       res.schedules.map(async (schedule) => {
@@ -164,15 +178,12 @@ export class ScheduleService {
 
   async save(data) {
     const createData: Prisma.ScheduleCreateInput = {
-      hasManualChange: data.hasManualChange,
       schedulesJSON: data.schedules,
     };
 
-    if (!data.hasManualChange) {
-      createData.metaheuristic = data.metaheuristic;
-      createData.isFeasible = data.isFeasible;
-      if (data.isFeasible) createData.score = data.score;
-    }
+    createData.metaheuristic = data.metaheuristic;
+    createData.isFeasible = data.isFeasible;
+    if (data.isFeasible) createData.score = data.score;
 
     const schedule = this.prisma.schedule.create({ data: createData });
     return schedule;
@@ -187,7 +198,6 @@ export class ScheduleService {
         id: true,
         createdAt: true,
         isFeasible: true,
-        hasManualChange: true,
         metaheuristic: true,
         score: true,
       },
