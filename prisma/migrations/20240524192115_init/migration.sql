@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Schedule" ALTER COLUMN "isFeasible" DROP NOT NULL,
-ALTER COLUMN "score" DROP NOT NULL;

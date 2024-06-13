@@ -1,3 +1,3 @@
-import { Prisma } from "@prisma/client";
-declare const teachers: Prisma.TeacherCreateInput[];
-export default teachers;
+import { Prisma, PrismaClient } from "@prisma/client";
+declare function getTeachers(prisma: PrismaClient): Promise<Prisma.TeacherCreateInput[]>;
+export default getTeachers;

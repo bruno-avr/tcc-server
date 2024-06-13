@@ -23,6 +23,31 @@ let TeacherService = class TeacherService {
         if (nameExists) {
             throw new Error("Teacher name already registered");
         }
+        await Promise.all((data?.subjectsPerClass?.create || []).map(async (unique) => {
+            const alreadyHasTeacher = await this.prisma.subjectPerClass.findFirst({
+                where: {
+                    classId: unique.class.connect.id,
+                    subjectPerGradeId: unique.subjectPerGrade.connect.id
+                },
+                include: {
+                    class: true,
+                    teacher: true,
+                    subjectPerGrade: {
+                        include: {
+                            subject: true,
+                            grade: true,
+                        }
+                    }
+                }
+            });
+            if (alreadyHasTeacher) {
+                let errMsg = `Já existe um professor (${alreadyHasTeacher.teacher.name}) `;
+                errMsg += `associado à disciplina ${alreadyHasTeacher.subjectPerGrade.subject.name} `;
+                errMsg += `na turma ${alreadyHasTeacher.subjectPerGrade.grade.name} - `;
+                errMsg += `${alreadyHasTeacher.class.section}.`;
+                throw new Error(errMsg);
+            }
+        }));
         const teacher = await this.prisma.teacher.create({
             data: {
                 ...data,
@@ -112,6 +137,33 @@ let TeacherService = class TeacherService {
         });
         if (teacherExists && teacherExists.id !== id)
             throw new Error("Já existe um professor registrado com esse nome.");
+        await Promise.all((data?.subjectsPerClass?.create || []).map(async (unique) => {
+            const alreadyHasTeacher = await this.prisma.subjectPerClass.findFirst({
+                where: {
+                    classId: unique.class.connect.id,
+                    subjectPerGradeId: unique.subjectPerGrade.connect.id,
+                    teacherId: { not: id }
+                },
+                include: {
+                    class: true,
+                    teacher: true,
+                    subjectPerGrade: {
+                        include: {
+                            subject: true,
+                            grade: true,
+                        }
+                    }
+                }
+            });
+            if (alreadyHasTeacher) {
+                let errMsg = `Dois professores não podem estar associados à mesma disciplina em uma turma. `;
+                errMsg += `O professor ${alreadyHasTeacher.teacher.name} já está associado `;
+                errMsg += `à disciplina ${alreadyHasTeacher.subjectPerGrade.subject.name} `;
+                errMsg += `na turma ${alreadyHasTeacher.subjectPerGrade.grade.name} - `;
+                errMsg += `${alreadyHasTeacher.class.section}.`;
+                throw new Error(errMsg);
+            }
+        }));
         const existants = [];
         const news = [];
         await Promise.all(data.subjectsPerClass.create.map(async (el) => {

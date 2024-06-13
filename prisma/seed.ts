@@ -1,17 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import teachers from "./seed-objects/teachers";
 import grades from "./seed-objects/grades";
 import getSubjects from "./seed-objects/subjects";
 import getClasses from "./seed-objects/classes";
+import getTeachers from "./seed-objects/teachers";
 const prisma = new PrismaClient();
 
 async function main() {
   try {
-    console.log("Seeding users...");
-    const teacherObjs = await Promise.all(
-      teachers.map(async (data) => await prisma.teacher.create({ data }))
-    );
-
     console.log("Seeding grades...");
     const gradeObjs = await Promise.all(
       grades.map(async (data) => await prisma.grade.create({ data }))
@@ -27,6 +22,12 @@ async function main() {
     const subjects = getSubjects(gradeObjs);
     const subjectObjs = await Promise.all(
       subjects.map(async (data) => await prisma.subject.create({ data }))
+    );
+
+    console.log("Seeding teachers...");
+    const teachers = await getTeachers(prisma);
+    const teacherObjs = await Promise.all(
+      teachers.map(async (data) => await prisma.teacher.create({ data }))
     );
   } catch (error) {
     console.log("Aconteceu um erro: " + error.message);
