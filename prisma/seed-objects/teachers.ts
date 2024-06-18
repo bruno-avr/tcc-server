@@ -38,8 +38,44 @@ function randomTeacher() {
   const randomIndex = Math.floor(Math.random() * teachers.length);
   return teachers[randomIndex];
 }
+const WEEKLY_LESSONS = 25;
+let currTeacher = 0;
+const obj = {};
+function getTeacher(subjectId, numWeeklyLessons) {
+  if (!obj[subjectId] || obj[subjectId].remainingLessons < numWeeklyLessons) {
+    obj[subjectId] = {
+      remainingLessons: WEEKLY_LESSONS,
+      teacherIndex: currTeacher++
+    }
+  }
+  obj[subjectId].remainingLessons -= numWeeklyLessons;
+  if (currTeacher >= teachers.length) throw new Error("Not enough teachers");
+  return teachers[obj[subjectId].teacherIndex];
+}
 
-async function getTeachers(prisma: PrismaClient) {
+async function oneTeacherPerSubject(prisma: PrismaClient) {
+  const subjectPerGrades = await prisma.subjectPerGrade.findMany({})
+  await Promise.all(subjectPerGrades.map(async subjectPerGrade => {
+    const classes = await prisma.class.findMany({where: { gradeId: subjectPerGrade.gradeId }})
+    classes.forEach(({ id }) => {
+      const teacher = getTeacher(subjectPerGrade.subjectId, subjectPerGrade.numWeeklyLessons);
+      (teacher.subjectsPerClass.create as Prisma.SubjectPerClassCreateWithoutTeacherInput[]).push({
+        class: {
+          connect: {
+            id,
+          },
+        },
+        subjectPerGrade: {
+          connect: {
+            id: subjectPerGrade.id,
+          },
+        },
+      })
+    })
+  }))
+}
+
+async function randomTeacherPerSubject(prisma: PrismaClient) {
   const subjectPerGrades = await prisma.subjectPerGrade.findMany({})
   await Promise.all(subjectPerGrades.map(async subjectPerGrade => {
     const classes = await prisma.class.findMany({where: { gradeId: subjectPerGrade.gradeId }})
@@ -59,7 +95,11 @@ async function getTeachers(prisma: PrismaClient) {
       })
     })
   }))
+}
 
+async function getTeachers(prisma: PrismaClient) {
+  // await randomTeacherPerSubject(prisma);
+  await oneTeacherPerSubject(prisma);
   return teachers;
 }
 

@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { writeFileSync } from 'fs';
 
 export type cppBridgeTypes =
   | "generate"
@@ -23,6 +24,7 @@ export default class CPPBridge {
     const cpp = spawn("./bin/a.out");
     // console.log(this.input);
     // return this.input;
+    writeFileSync('input.txt', this.input);
     cpp.stdin.write(this.input);
     cpp.stdin.end();
 
