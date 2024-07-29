@@ -196,6 +196,16 @@ let TeacherService = class TeacherService {
         }
         return teacher;
     }
+    async remove(id) {
+        await this.prisma.$transaction(async (prisma) => {
+            await prisma.subjectPerClass.deleteMany({
+                where: { teacherId: id },
+            });
+            await prisma.teacher.delete({
+                where: { id },
+            });
+        });
+    }
 };
 exports.TeacherService = TeacherService;
 exports.TeacherService = TeacherService = __decorate([

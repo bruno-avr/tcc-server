@@ -160,4 +160,24 @@ export class SubjectService {
 
     return subject;
   }
+
+  async remove(id: string) {
+    const hasSubject = await this.prisma.teacher.findFirst({
+      where: { subjectsPerClass: { some: { subjectPerGrade: { subjectId: id } } } },
+    });
+    if (hasSubject)
+      throw new Error("Existem professores que dependem dessa disciplina.");
+    
+    await this.prisma.$transaction(async (prisma) => {
+      // Delete related SubjectPerGrade records
+      await prisma.subjectPerGrade.deleteMany({
+        where: { subjectId: id },
+      });
+  
+      // Delete the Subject
+      await prisma.subject.delete({
+        where: { id },
+      });
+    });
+  }
 }

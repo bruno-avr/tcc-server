@@ -36,4 +36,5 @@ export declare class SubjectService {
         id: string;
         name: string;
     }>;
+    remove(id: string): Promise<void>;
 }

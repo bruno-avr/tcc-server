@@ -21,4 +21,5 @@ export declare class TeacherService {
         id: string;
         name: string;
     }>;
+    remove(id: string): Promise<void>;
 }

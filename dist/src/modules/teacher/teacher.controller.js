@@ -32,6 +32,9 @@ let TeacherController = class TeacherController {
     update(id, data) {
         return this.teacherService.update(id, data);
     }
+    remove(id) {
+        return this.teacherService.remove(id);
+    }
 };
 exports.TeacherController = TeacherController;
 __decorate([
@@ -62,6 +65,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], TeacherController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], TeacherController.prototype, "remove", null);
 exports.TeacherController = TeacherController = __decorate([
     (0, common_1.Controller)("teacher"),
     __metadata("design:paramtypes", [teacher_service_1.TeacherService])

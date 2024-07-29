@@ -35,6 +35,9 @@ let SubjectController = class SubjectController {
     update(id, data) {
         return this.subjectService.update(id, data);
     }
+    remove(id) {
+        return this.subjectService.remove(id);
+    }
 };
 exports.SubjectController = SubjectController;
 __decorate([
@@ -71,6 +74,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], SubjectController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], SubjectController.prototype, "remove", null);
 exports.SubjectController = SubjectController = __decorate([
     (0, common_1.Controller)("subject"),
     __metadata("design:paramtypes", [subject_service_1.SubjectService])

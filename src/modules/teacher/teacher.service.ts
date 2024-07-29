@@ -215,4 +215,18 @@ export class TeacherService {
 
     return teacher;
   }
+
+  async remove(id: string) {
+    await this.prisma.$transaction(async (prisma) => {
+      // Delete related SubjectPerClass records
+      await prisma.subjectPerClass.deleteMany({
+        where: { teacherId: id },
+      });
+  
+      // Delete the Teacher
+      await prisma.teacher.delete({
+        where: { id },
+      });
+    });
+  }
 }
