@@ -125,6 +125,23 @@ export class TeacherService {
     return processedTeachers;
   }
 
+  async getPriorities() {
+    const teachers = await this.prisma.teacher.findMany({
+      orderBy: [{ name: "asc" }],
+    })
+
+    const processedTeachers = teachers.map((teacher) => ({
+      id: teacher.id,
+      name: teacher.name,
+    }));
+
+    const priorities = [
+      { id: "0", priority: 0, teachers: processedTeachers }
+    ]
+
+    return priorities;
+  }
+
   async findOne(id: string) {
     const teacher = await this.prisma.teacher.findFirst({
       where: { id },

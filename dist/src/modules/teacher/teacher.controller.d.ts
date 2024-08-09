@@ -13,6 +13,14 @@ export declare class TeacherController {
         selectedClasses: {};
         classesPerSubject: any[];
     }[]>;
+    getPriorities(): Promise<{
+        id: string;
+        priority: number;
+        teachers: {
+            id: string;
+            name: string;
+        }[];
+    }[]>;
     findOne(id: string): Promise<{
         id: string;
         name: string;

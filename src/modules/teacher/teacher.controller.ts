@@ -24,6 +24,11 @@ export class TeacherController {
     return this.teacherService.find();
   }
 
+  @Get('/priorities')
+  getPriorities() {
+    return this.teacherService.getPriorities();
+  }
+
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.teacherService.findOne(id);
