@@ -20,7 +20,17 @@ generator erd {
 model Teacher { // Professor
   id              String       @id @default(uuid())
   name            String
+  priority        Int          @default(0)
   subjectsPerClass     SubjectPerClass[]
+  timeSlots       TimeSlot[]  // Array of time slots with start and end times
+}
+
+model TimeSlot {
+  id     String @id @default(uuid())
+  start  Int
+  end    Int
+  teacherId String
+  teacher Teacher @relation(fields: [teacherId], references: [id])
 }
 
 model Subject { // Disciplina

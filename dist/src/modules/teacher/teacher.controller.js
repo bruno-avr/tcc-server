@@ -29,6 +29,9 @@ let TeacherController = class TeacherController {
     getPriorities() {
         return this.teacherService.getPriorities();
     }
+    savePriorities(data) {
+        return this.teacherService.savePriorities(data);
+    }
     findOne(id) {
         return this.teacherService.findOne(id);
     }
@@ -59,6 +62,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TeacherController.prototype, "getPriorities", null);
+__decorate([
+    (0, common_1.Post)('/priorities'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", void 0)
+], TeacherController.prototype, "savePriorities", null);
 __decorate([
     (0, common_1.Get)(":id"),
     __param(0, (0, common_1.Param)("id")),

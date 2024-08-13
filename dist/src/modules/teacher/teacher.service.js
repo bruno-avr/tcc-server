@@ -126,14 +126,39 @@ let TeacherService = class TeacherService {
         const teachers = await this.prisma.teacher.findMany({
             orderBy: [{ name: "asc" }],
         });
-        const processedTeachers = teachers.map((teacher) => ({
+        const teacherMap = {};
+        teachers.forEach((teacher) => {
+            const processedTeacher = {
+                id: teacher.id,
+                name: teacher.name,
+            };
+            if (!teacherMap[teacher.priority])
+                teacherMap[teacher.priority] = [];
+            teacherMap[teacher.priority].push(processedTeacher);
+        });
+        const priorities = Object.keys(teacherMap).map(Number);
+        const minPriority = 0;
+        const maxPriority = Math.max(...priorities);
+        const result = [];
+        for (let i = minPriority; i <= maxPriority; i++) {
+            result.push({
+                id: String(i),
+                priority: i,
+                teachers: teacherMap[i] || [],
+            });
+        }
+        return result;
+    }
+    async savePriorities(data) {
+        const updatedTeachers = data.flatMap(column => column.teachers.map(teacher => ({
             id: teacher.id,
-            name: teacher.name,
+            newPriority: column.priority
+        })));
+        const updatePromises = updatedTeachers.map(({ id, newPriority }) => this.prisma.teacher.update({
+            where: { id },
+            data: { priority: newPriority }
         }));
-        const priorities = [
-            { id: "0", priority: 0, teachers: processedTeachers }
-        ];
-        return priorities;
+        await Promise.all(updatePromises);
     }
     async findOne(id) {
         const teacher = await this.prisma.teacher.findFirst({

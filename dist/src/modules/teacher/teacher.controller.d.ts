@@ -1,4 +1,4 @@
-import { TeacherService } from "./teacher.service";
+import { Priorities, TeacherService } from "./teacher.service";
 import { Prisma } from "@prisma/client";
 export declare class TeacherController {
     private readonly teacherService;
@@ -6,6 +6,7 @@ export declare class TeacherController {
     create(data: Prisma.TeacherCreateInput): Promise<{
         id: string;
         name: string;
+        priority: number;
     }>;
     find(): Promise<{
         id: string;
@@ -13,21 +14,17 @@ export declare class TeacherController {
         selectedClasses: {};
         classesPerSubject: any[];
     }[]>;
-    getPriorities(): Promise<{
-        id: string;
-        priority: number;
-        teachers: {
-            id: string;
-            name: string;
-        }[];
-    }[]>;
+    getPriorities(): Promise<any[]>;
+    savePriorities(data: Priorities): Promise<void>;
     findOne(id: string): Promise<{
         id: string;
         name: string;
+        priority: number;
     }>;
     update(id: string, data: Prisma.TeacherUpdateInput): Promise<{
         id: string;
         name: string;
+        priority: number;
     }>;
     remove(id: string): Promise<void>;
 }

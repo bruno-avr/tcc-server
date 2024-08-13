@@ -7,7 +7,7 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
-import { TeacherService } from "./teacher.service";
+import { Priorities, TeacherService } from "./teacher.service";
 import { Prisma } from "@prisma/client";
 
 @Controller("teacher")
@@ -27,6 +27,11 @@ export class TeacherController {
   @Get('/priorities')
   getPriorities() {
     return this.teacherService.getPriorities();
+  }
+
+  @Post('/priorities')
+  savePriorities(@Body() data: Priorities) {
+    return this.teacherService.savePriorities(data);
   }
 
   @Get(":id")
