@@ -13,6 +13,12 @@ export declare class TeacherController {
         name: string;
         selectedClasses: {};
         classesPerSubject: any[];
+        timeSlots: {
+            id: string;
+            start: number;
+            end: number;
+            teacherId: string;
+        }[];
     }[]>;
     getPriorities(): Promise<any[]>;
     savePriorities(data: Priorities): Promise<void>;

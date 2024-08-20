@@ -91,6 +91,7 @@ export class TeacherService {
             },
           },
         },
+        timeSlots: true,
       },
     });
 
@@ -128,6 +129,7 @@ export class TeacherService {
         name: teacher.name,
         selectedClasses,
         classesPerSubject,
+        timeSlots: teacher.timeSlots
       };
     });
 

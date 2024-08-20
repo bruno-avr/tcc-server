@@ -86,6 +86,7 @@ let TeacherService = class TeacherService {
                         },
                     },
                 },
+                timeSlots: true,
             },
         });
         const processedTeachers = teachers.map((teacher) => {
@@ -118,6 +119,7 @@ let TeacherService = class TeacherService {
                 name: teacher.name,
                 selectedClasses,
                 classesPerSubject,
+                timeSlots: teacher.timeSlots
             };
         });
         return processedTeachers;
