@@ -1,53 +1,80 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
+const defaulTimeSlots = [
+  {start: 420, end: 690},   // 420, 470, 520, 590, 640
+  {start: 1860, end: 2130}, // 1860, 1910, 1960, 2030, 2080
+  {start: 3300, end: 3570}, // 3300, 3350, 3400, 3470, 3520
+  {start: 4740, end: 5010}, // 4740, 4790, 4840, 4910, 4960
+  {start: 6180, end: 6450}  // 6180, 6230, 6280, 6350, 6400
+];
+
+const blankTeacher = (name: string) => ({
+  name,
+  subjectsPerClass: { create: [] },
+  priority: Math.floor(Math.random() * 5),
+})
+
 const teachers = [
-  { name: "Bruno Alencar", subjectsPerClass: { create: [] } },
-  { name: "Sophia Santos", subjectsPerClass: { create: [] } },
-  { name: "Gabriel Silva", subjectsPerClass: { create: [] } },
-  { name: "Isabella Oliveira", subjectsPerClass: { create: [] } },
-  { name: "Lucas Pereira", subjectsPerClass: { create: [] } },
-  { name: "Maria Fernandes", subjectsPerClass: { create: [] } },
-  { name: "Matheus Costa", subjectsPerClass: { create: [] } },
-  { name: "Juliana Souza", subjectsPerClass: { create: [] } },
-  { name: "Rafaela Martins", subjectsPerClass: { create: [] } },
-  { name: "Pedro Santos", subjectsPerClass: { create: [] } },
-  { name: "Ana Clara", subjectsPerClass: { create: [] } },
-  { name: "Caio Alves", subjectsPerClass: { create: [] } },
-  { name: "Larissa Carvalho", subjectsPerClass: { create: [] } },
-  { name: "Thiago Costa", subjectsPerClass: { create: [] } },
-  { name: "Camila Freitas", subjectsPerClass: { create: [] } },
-  { name: "Rodrigo Lima", subjectsPerClass: { create: [] } },
-  { name: "Fernanda Mendes", subjectsPerClass: { create: [] } },
-  { name: "Renato Rocha", subjectsPerClass: { create: [] } },
-  { name: "Aline Barros", subjectsPerClass: { create: [] } },
-  { name: "Henrique Gonçalves", subjectsPerClass: { create: [] } },
-  { name: "Bianca Nunes", subjectsPerClass: { create: [] } },
-  { name: "Victor Braga", subjectsPerClass: { create: [] } },
-  { name: "Patrícia Almeida", subjectsPerClass: { create: [] } },
-  { name: "Carlos Magalhães", subjectsPerClass: { create: [] } },
-  { name: "André Silva", subjectsPerClass: { create: [] } },
-  { name: "Eduarda Rodrigues", subjectsPerClass: { create: [] } },
-  { name: "Felipe Farias", subjectsPerClass: { create: [] } },
-  { name: "Gabriela Souza", subjectsPerClass: { create: [] } },
-  { name: "João Pedro", subjectsPerClass: { create: [] } },
-  { name: "Marina Ribeiro", subjectsPerClass: { create: [] } },
-  { name: "Samuel Teixeira", subjectsPerClass: { create: [] } }
+  blankTeacher("Bruno Alencar"),
+  blankTeacher("Sophia Santos"),
+  blankTeacher("Gabriel Silva"),
+  blankTeacher("Isabella Oliveira"),
+  blankTeacher("Lucas Pereira"),
+  blankTeacher("Maria Fernandes"),
+  blankTeacher("Matheus Costa"),
+  blankTeacher("Juliana Souza"),
+  blankTeacher("Rafaela Martins"),
+  blankTeacher("Pedro Santos"),
+  blankTeacher("Ana Clara"),
+  blankTeacher("Caio Alves"),
+  blankTeacher("Larissa Carvalho"),
+  blankTeacher("Thiago Costa"),
+  blankTeacher("Camila Freitas"),
+  blankTeacher("Rodrigo Lima"),
+  blankTeacher("Fernanda Mendes"),
+  blankTeacher("Renato Rocha"),
+  blankTeacher("Aline Barros"),
+  blankTeacher("Henrique Gonçalves"),
+  blankTeacher("Bianca Nunes"),
+  blankTeacher("Victor Braga"),
+  blankTeacher("Patrícia Almeida"),
+  blankTeacher("Carlos Magalhães"),
+  blankTeacher("André Silva"),
+  blankTeacher("Eduarda Rodrigues"),
+  blankTeacher("Felipe Farias"),
+  blankTeacher("Gabriela Souza"),
+  blankTeacher("João Pedro"),
+  blankTeacher("Marina Ribeiro"),
+  blankTeacher("Samuel Teixeira"),
 ] as Prisma.TeacherCreateInput[];
 
 function randomTeacher() {
   const randomIndex = Math.floor(Math.random() * teachers.length);
   return teachers[randomIndex];
 }
+
+const numLessonsPerTeacher = {}
 const WEEKLY_LESSONS = 25;
-let currTeacher = 0;
+const CLASSES_PER_SLOT = 5;
+let currTeacher = -1;
 const obj = {};
 function getTeacher(subjectId, numWeeklyLessons) {
-  if (!obj[subjectId] || obj[subjectId].remainingLessons < numWeeklyLessons) {
+  if (!obj[subjectId] || (obj[subjectId].remainingLessons < numWeeklyLessons)) {
     obj[subjectId] = {
       remainingLessons: WEEKLY_LESSONS,
-      teacherIndex: currTeacher++
+      teacherIndex: ++currTeacher
     }
   }
+  if ((numLessonsPerTeacher[obj[subjectId].teacherIndex] || 0) + numWeeklyLessons > WEEKLY_LESSONS) {
+    obj[subjectId] = {
+      remainingLessons: WEEKLY_LESSONS,
+      teacherIndex: ++currTeacher
+    }
+  }
+  if (!numLessonsPerTeacher[obj[subjectId].teacherIndex]) numLessonsPerTeacher[obj[subjectId].teacherIndex] = 0;
+  numLessonsPerTeacher[obj[subjectId].teacherIndex] += numWeeklyLessons;
+  // console.log(`currTeacher="${currTeacher}", numWeeklyLessons="${numWeeklyLessons}, total=${numLessonsPerTeacher[currTeacher]}`)
+
   obj[subjectId].remainingLessons -= numWeeklyLessons;
   if (currTeacher >= teachers.length) throw new Error("Not enough teachers");
   return teachers[obj[subjectId].teacherIndex];
@@ -97,10 +124,26 @@ async function randomTeacherPerSubject(prisma: PrismaClient) {
   }))
 }
 
+function getRandomItems(arr, n) {
+  const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, n);
+}
+
+const getTimeSlots = (index: number) => {
+  const requiredSlots = Math.ceil((numLessonsPerTeacher[index] || 0) / CLASSES_PER_SLOT);
+  // console.log(teachers[index].name, numLessonsPerTeacher[index], requiredSlots)
+  if (requiredSlots > defaulTimeSlots.length) throw new Error("Not enough time slots");
+  const timeSlots = getRandomItems(defaulTimeSlots, requiredSlots);
+  
+  return {
+    create: timeSlots,
+  }
+}
+
 async function getTeachers(prisma: PrismaClient) {
   // await randomTeacherPerSubject(prisma);
   await oneTeacherPerSubject(prisma);
-  return teachers;
+  return teachers.map((teacher, index) => ({...teacher, timeSlots: getTimeSlots(index)}));
 }
 
 export default getTeachers;

@@ -42,7 +42,7 @@ let ScheduleService = class ScheduleService {
         teachers = teachers.filter((teacher) => teacher.subjectsPerClass.length);
         cppBridge.appendLine(teachers.length);
         teachers.forEach((teacher) => {
-            cppBridge.appendLine([teacher.id, teacher.subjectsPerClass.length, teacher.timeSlots.length]);
+            cppBridge.appendLine([teacher.id, teacher.priority, teacher.subjectsPerClass.length, teacher.timeSlots.length]);
             teacher.subjectsPerClass.forEach((subjectPerClass) => {
                 cppBridge.appendLine([
                     subjectPerClass.subjectPerGrade.subjectId,

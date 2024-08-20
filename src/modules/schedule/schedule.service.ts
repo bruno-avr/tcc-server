@@ -47,7 +47,7 @@ export class ScheduleService {
     cppBridge.appendLine(teachers.length); // number of teachers
 
     teachers.forEach((teacher) => {
-      cppBridge.appendLine([teacher.id, teacher.subjectsPerClass.length, teacher.timeSlots.length]);
+      cppBridge.appendLine([teacher.id, teacher.priority, teacher.subjectsPerClass.length, teacher.timeSlots.length]);
       teacher.subjectsPerClass.forEach((subjectPerClass) => {
         cppBridge.appendLine([
           subjectPerClass.subjectPerGrade.subjectId,
