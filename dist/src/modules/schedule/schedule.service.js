@@ -36,16 +36,23 @@ let ScheduleService = class ScheduleService {
                         },
                     },
                 },
+                timeSlots: true,
             },
         });
         teachers = teachers.filter((teacher) => teacher.subjectsPerClass.length);
         cppBridge.appendLine(teachers.length);
         teachers.forEach((teacher) => {
-            cppBridge.appendLine([teacher.id, teacher.subjectsPerClass.length]);
+            cppBridge.appendLine([teacher.id, teacher.subjectsPerClass.length, teacher.timeSlots.length]);
             teacher.subjectsPerClass.forEach((subjectPerClass) => {
                 cppBridge.appendLine([
                     subjectPerClass.subjectPerGrade.subjectId,
                     subjectPerClass.classId,
+                ]);
+            });
+            teacher.timeSlots.forEach((timeSlot) => {
+                cppBridge.appendLine([
+                    timeSlot.start,
+                    timeSlot.end,
                 ]);
             });
         });

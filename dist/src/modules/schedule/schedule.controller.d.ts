@@ -16,8 +16,8 @@ export declare class ScheduleController {
         createdAt: Date;
     }>;
     find(): Promise<{
-        id: string;
         metaheuristic: string;
+        id: string;
         isFeasible: boolean;
         score: number;
         createdAt: Date;
