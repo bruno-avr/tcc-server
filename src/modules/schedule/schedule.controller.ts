@@ -21,7 +21,7 @@ export class ScheduleController {
     @Param("metaheuristic") metaheuristic: cppBridgeMetaheuristcs,
     @Body() data
   ) {
-    return this.scheduleService.generate("generate", { metaheuristic });
+    return this.scheduleService.generate("generate", { metaheuristic, executionSpeed: data.executionSpeed });
   }
 
   @Post("/fixed-recalculation/:metaheuristic")

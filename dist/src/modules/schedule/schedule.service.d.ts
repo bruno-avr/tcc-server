@@ -1,11 +1,12 @@
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../database/prisma.service";
-import { cppBridgeMetaheuristcs, cppBridgeTypes } from "src/utils/CPPBridge";
+import { cppBridgeMetaheuristcs, cppBridgeTypes, cppBridgeExecutionSpeed } from "src/utils/CPPBridge";
 export declare class ScheduleService {
     private prisma;
     constructor(prisma: PrismaService);
     generate(type: cppBridgeTypes, data: {
         metaheuristic?: cppBridgeMetaheuristcs;
+        executionSpeed?: cppBridgeExecutionSpeed;
         defaultSchedule?: any;
     }): Promise<any>;
     save(data: any): Promise<{
@@ -17,8 +18,8 @@ export declare class ScheduleService {
         createdAt: Date;
     }>;
     find(): Promise<{
-        metaheuristic: string;
         id: string;
+        metaheuristic: string;
         isFeasible: boolean;
         score: number;
         createdAt: Date;

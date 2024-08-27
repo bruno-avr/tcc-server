@@ -20,7 +20,7 @@ let ScheduleController = class ScheduleController {
         this.scheduleService = scheduleService;
     }
     generate(metaheuristic, data) {
-        return this.scheduleService.generate("generate", { metaheuristic });
+        return this.scheduleService.generate("generate", { metaheuristic, executionSpeed: data.executionSpeed });
     }
     fixedRecalculation(metaheuristic, data) {
         return this.scheduleService.generate("fixed_recalculation", {

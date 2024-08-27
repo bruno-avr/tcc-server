@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const fs_1 = require("fs");
 class CPPBridge {
-    constructor(type, metaheuristic) {
-        if (metaheuristic)
-            this.input = `${type} ${metaheuristic}\n`;
-        else
-            this.input = `${type}\n`;
+    constructor(type, metaheuristic, executionSpeed) {
+        this.input = `${type}`;
+        if (metaheuristic && executionSpeed) {
+            this.input += ` ${metaheuristic} ${executionSpeed}`;
+        }
+        this.input += "\n";
     }
     appendLine(line) {
         this.input += (Array.isArray(line) ? line.join(" ") : String(line)) + "\n";

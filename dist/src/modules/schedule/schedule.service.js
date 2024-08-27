@@ -22,7 +22,9 @@ let ScheduleService = class ScheduleService {
             data.metaheuristic !== "simulatedAnnealing") {
             throw new Error("Metaheuristica invalida.");
         }
-        const cppBridge = new CPPBridge_1.default(type, data.metaheuristic || undefined);
+        if (data.metaheuristic && !data.executionSpeed)
+            data.executionSpeed = "fast";
+        const cppBridge = new CPPBridge_1.default(type, data.metaheuristic || undefined, data.executionSpeed);
         let teachers = await this.prisma.teacher.findMany({
             include: {
                 subjectsPerClass: {
