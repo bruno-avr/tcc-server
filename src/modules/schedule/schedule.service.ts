@@ -4,7 +4,7 @@ import { PrismaService } from "../../database/prisma.service";
 import CPPBridge, {
   cppBridgeMetaheuristcs,
   cppBridgeTypes,
-  cppBridgeExecutionSpeed,
+  cppBridgePerformanceMode,
 } from "src/utils/CPPBridge";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class ScheduleService {
     type: cppBridgeTypes,
     data: {
       metaheuristic?: cppBridgeMetaheuristcs;
-      executionSpeed?: cppBridgeExecutionSpeed;
+      performanceMode?: cppBridgePerformanceMode;
       defaultSchedule?: any;
     }
   ) {
@@ -26,9 +26,9 @@ export class ScheduleService {
       throw new Error("Metaheuristica invalida.");
     }
 
-    if (data.metaheuristic && !data.executionSpeed) data.executionSpeed = "fast";
+    if (data.metaheuristic && !data.performanceMode) data.performanceMode = "fast";
 
-    const cppBridge = new CPPBridge(type, data.metaheuristic || undefined, data.executionSpeed);
+    const cppBridge = new CPPBridge(type, data.metaheuristic || undefined, data.performanceMode);
 
     let teachers = await this.prisma.teacher.findMany({
       include: {

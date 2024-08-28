@@ -7,15 +7,15 @@ export type cppBridgeTypes =
   | "fixed_recalculation";
 
 export type cppBridgeMetaheuristcs = "simulatedAnnealing";
-export type cppBridgeExecutionSpeed = "fast" | "medium" | "slow";
+export type cppBridgePerformanceMode = "fast" | "balanced" | "precision";
 
 export default class CPPBridge {
   input: string;
 
-  constructor(type: cppBridgeTypes, metaheuristic?: cppBridgeMetaheuristcs, executionSpeed?: cppBridgeExecutionSpeed) {
+  constructor(type: cppBridgeTypes, metaheuristic?: cppBridgeMetaheuristcs, performanceMode?: cppBridgePerformanceMode) {
     this.input = `${type}`
-    if (metaheuristic && executionSpeed) {
-      this.input += ` ${metaheuristic} ${executionSpeed}`;
+    if (metaheuristic && performanceMode) {
+      this.input += ` ${metaheuristic} ${performanceMode}`;
     }
     this.input += "\n";
   }

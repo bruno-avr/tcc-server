@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const fs_1 = require("fs");
 class CPPBridge {
-    constructor(type, metaheuristic, executionSpeed) {
+    constructor(type, metaheuristic, performanceMode) {
         this.input = `${type}`;
-        if (metaheuristic && executionSpeed) {
-            this.input += ` ${metaheuristic} ${executionSpeed}`;
+        if (metaheuristic && performanceMode) {
+            this.input += ` ${metaheuristic} ${performanceMode}`;
         }
         this.input += "\n";
     }
