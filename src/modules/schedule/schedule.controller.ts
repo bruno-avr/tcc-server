@@ -31,7 +31,8 @@ export class ScheduleController {
   ) {
     return this.scheduleService.generate("fixed_recalculation", {
       metaheuristic,
-      defaultSchedule: data,
+      defaultSchedule: data.defaultSchedule,
+      performanceMode: data.performanceMode
     });
   }
 

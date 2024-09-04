@@ -18,8 +18,8 @@ export declare class ScheduleService {
         createdAt: Date;
     }>;
     find(): Promise<{
-        id: string;
         metaheuristic: string;
+        id: string;
         isFeasible: boolean;
         score: number;
         createdAt: Date;
